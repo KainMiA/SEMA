@@ -1,17 +1,4 @@
-# SEMA
-Neighbourhood-Aware Multi-pathway Enrichment Analysis for Spatial Transcriptomics
-
-<div align="center">
-https://github.com/yourusername/SMEA/workflows/R-CMD-check/badge.svg
-https://img.shields.io/badge/License-MIT-yellow.svg
-https://img.shields.io/badge/R-%253E%253D%25204.0-blue.svg
-https://img.shields.io/badge/Bioconductor-3.15%252B-green.svg
-https://img.shields.io/github/stars/yourusername/SMEA.svg?style=social
-https://img.shields.io/github/forks/yourusername/SMEA.svg?style=social
-
-A comprehensive R package for spatial gene set enrichment analysis with high-performance implementations
-
-</div>
+# SEMA: Neighbourhood-Aware Multi-pathway Enrichment Analysis for Spatial Transcriptomics
 
 📖 Overview
 
@@ -74,13 +61,13 @@ Basic Usage with Seurat
 
 If you use SMEA in your research, please cite:
 
-bibtex
-@software{smea_package,
-  title = {SMEA: Spatial Multi-omics Enrichment Analysis},
-  author = {Your Name and Contributors},
-  year = {2024},
-  version = {0.1.0},
-  url = {https://github.com/yourusername/SMEA},
-  note = {R package}
-}
+    bibtex
+    @software{smea_package,
+      title = {SMEA: Spatial Multi-omics Enrichment Analysis},
+      author = {Your Name and Contributors},
+      year = {2024},
+      version = {0.1.0},
+      url = {https://github.com/yourusername/SMEA},
+      note = {R package}
+    }
 
