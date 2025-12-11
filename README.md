@@ -1,8 +1,8 @@
-# SEMA: Neighbourhood-Aware Multi-pathway Enrichment Analysis for Spatial Transcriptomics
+# SEMA: Spatial Expression Multi-pathways Enrichment Analysis
 
 📖 Overview
 
-SMEA (Spatial Multi-omics Enrichment Analysis) is an R package designed for comprehensive gene set enrichment analysis in spatial transcriptomics data. It integrates spatial information directly into gene set scoring, enabling the discovery of spatially-informed biological patterns that traditional methods might miss.
+SMEA (Spatial Expression Multi-pathways Enrichment Analysis) is an R package designed for comprehensive gene set enrichment analysis in spatial transcriptomics data. It integrates spatial information directly into gene set scoring, enabling the discovery of spatially-informed biological patterns that traditional methods might miss.
 
 <div align="center"> <img src="https://raw.githubusercontent.com/yourusername/SMEA/main/vignettes/figures/spatial_scores.png" alt="Spatial Scores Visualization" width="800"/> </div>
 
@@ -63,7 +63,7 @@ If you use SMEA in your research, please cite:
 
     bibtex
     @software{smea_package,
-      title = {SMEA: Spatial Multi-omics Enrichment Analysis},
+      title = {SMEA: Spatial Expression Multi-pathways Enrichment Analysis},
       author = {Your Name and Contributors},
       year = {2024},
       version = {0.1.0},
