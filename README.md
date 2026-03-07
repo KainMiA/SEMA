@@ -5,7 +5,7 @@
 
 SMEA (Spatial Expression Multi-pathways Enrichment Analysis) is an R package designed for comprehensive gene set enrichment analysis in spatial transcriptomics data. It integrates spatial information directly into gene set scoring, enabling the discovery of spatially-informed biological patterns that traditional methods might miss.
 
-<div align="center"> <img src="https://raw.githubusercontent.com/yourusername/SMEA/main/vignettes/figures/spatial_scores.png" alt="Spatial Scores Visualization" width="800"/> </div>
+<div align="center"> <img src="https://github.com/KainMiA/SEMA/blob/main/SEMA_diagram.png" alt="SEMA" width="800"/> </div>
 
 
 ### 📦 Installation
