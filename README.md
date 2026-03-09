@@ -40,13 +40,11 @@ Basic Usage with Seurat
     # Run spatial enrichment analysis
     smea_results <- RunSMEA(
       object = seurat_obj,
-      gene.sets = gene_sets,
-      method = "aucell",
-      spatial.method = "gaussian_kernel",
-      k = 10,
-      spatial.weight = 0.3,
-      n.cores = 4,
-      verbose = TRUE
+      gene_sets = gene_sets,
+      assay = "Spatial",
+      method = "mean",
+      k = 6,
+      spatial.weight = 0.5
     )
     
     # View results
