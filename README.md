@@ -53,22 +53,4 @@ Basic Usage with Seurat
     print(smea_results)
     summary(smea_results)
     
-    # Visualize results
-    plot(smea_results, gene.set = "Immune_Response", type = "spatial")
-    plot(smea_results, gene.set = "Immune_Response", type = "histogram")
-
-
-### 📄 Citation
-
-If you use SMEA in your research, please cite:
-
-    bibtex
-    @software{smea_package,
-      title = {SMEA: Spatial Expression Multi-pathways Enrichment Analysis},
-      author = {Your Name and Contributors},
-      year = {2024},
-      version = {0.1.0},
-      url = {https://github.com/yourusername/SMEA},
-      note = {R package}
-    }
 
