@@ -12,7 +12,7 @@ SMEA (Spatial-Aware Framework for Multi-Pathway Enrichment Analysis) is an R pac
 From GitHub
 
     # Install from GitHub
-    devtools::install_github("yourusername/SMEA")
+    devtools::install_github("Kain/SMEA/SEMA")
 
 From Source
 
