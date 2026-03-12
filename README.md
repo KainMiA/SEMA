@@ -16,7 +16,9 @@ From GitHub
 
 From Source
 
-    # Or install from local source
+    # Install from local source
+    git https://github.com/KainMiA/SEMA/
+    cd SEMA
     devtools::install_local("path/to/SMEA")
 
 
@@ -28,7 +30,7 @@ Basic Usage with Seurat
     library(Seurat)
     
     # Load your Seurat object
-    seurat_obj <- readRDS("your_data.rds")
+    seurat_obj <- readRDS("demo_seurat_data.rds")
     
     # Define gene sets
     gene_sets <- list(
@@ -48,7 +50,10 @@ Basic Usage with Seurat
     )
     
     # View results
-    print(smea_results)
-    summary(smea_results)
+    seurat_obj@meta.data$Immune_Response <- gene_sets$Immune_Response$spatial_scores
+    seurat_obj@meta.data$Angiogenesis <- gene_sets$Angiogenesis$spatial_scores
+    seurat_obj@meta.data$Hypoxia <- gene_sets$Hypoxia$spatial_scores
+
+    SpatialFeaturePlot(seurat_obj, features = c("Immune_Response","Angiogenesis","Hypoxia"))
     
 
