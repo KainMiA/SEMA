@@ -55,4 +55,4 @@ Basic Usage with Seurat
 
     SpatialFeaturePlot(seurat_obj, features = c("Immune_Response","Angiogenesis","Hypoxia"))
     
-
+The detail tutorial please see https://kainmia.github.io/SEMA/
