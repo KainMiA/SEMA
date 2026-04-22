@@ -2,7 +2,7 @@
 
 ### 📖 Overview
 
-SMEA (Spatial-Aware Framework for Multi-Pathway Enrichment Analysis) is an R package designed for comprehensive gene set enrichment analysis in spatial transcriptomics data. It integrates spatial information directly into gene set scoring, enabling the discovery of spatially-informed biological patterns that traditional methods might miss.
+SEMA (**S**patial-**A**ware Framework for **M**ulti-Pathway **E**nrichment **A**nalysis) is an R package designed for comprehensive gene set enrichment analysis in spatial transcriptomics data. It integrates spatial information directly into gene set scoring, enabling the discovery of spatially informed biological patterns that traditional methods might miss.
 
 <div align="left"> <img src="https://github.com/KainMiA/SEMA/blob/main/SEMA_diagram.png" alt="SEMA" width="800"/> </div>
 
@@ -39,7 +39,7 @@ Basic Usage with Seurat
     )
     
     # Run spatial enrichment analysis
-    smea_results <- RunSMEA(
+    smea_results <- RunSEMA(
       object = seurat_obj,
       gene_sets = gene_sets,
       assay = "Spatial",
@@ -55,4 +55,4 @@ Basic Usage with Seurat
 
     SpatialFeaturePlot(seurat_obj, features = c("Immune_Response","Angiogenesis","Hypoxia"))
     
-The detail tutorial please see https://kainmia.github.io/SEMA/
+For a detailed tutorial, please visit: https://kainmia.github.io/SEMA/
