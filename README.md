@@ -49,9 +49,9 @@ Basic Usage with Seurat
     )
     
     # View results
-    seurat_obj@meta.data$Immune_Response <- gene_sets$Immune_Response$spatial_scores
-    seurat_obj@meta.data$Angiogenesis <- gene_sets$Angiogenesis$spatial_scores
-    seurat_obj@meta.data$Hypoxia <- gene_sets$Hypoxia$spatial_scores
+    seurat_obj@meta.data$Immune_Response <- smea_results$Immune_Response$spatial_scores
+    seurat_obj@meta.data$Angiogenesis <- smea_results$Angiogenesis$spatial_scores
+    seurat_obj@meta.data$Hypoxia <- smea_results$Hypoxia$spatial_scores
 
     SpatialFeaturePlot(seurat_obj, features = c("Immune_Response","Angiogenesis","Hypoxia"))
     
