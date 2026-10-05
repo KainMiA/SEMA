@@ -9,8 +9,6 @@ SEMA is an R package designed for comprehensive gene set enrichment analysis in 
 - **Gene-set enrichment** — score any list of gene sets on a spot/cell level.
 - **Spatially aware** — enrichment scores are smoothed over `k` spatial
   neighbors, controlled by `spatial.weight`.
-- **Seurat-native** — takes a `Seurat` object and writes results back into
-  its metadata, ready for `SpatialFeaturePlot()`.
 
 ---
 
@@ -131,3 +129,4 @@ hist(sema_results$Hypoxia$spatial_scores,
   consider filtering before running SEMA.
 
 ---
+For a detailed tutorial, please visit: https://kainmia.github.io/SEMA/
