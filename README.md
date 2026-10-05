@@ -18,7 +18,7 @@ SEMA is an R package designed for comprehensive gene set enrichment analysis in 
 
 ```r
 # install.packages("devtools")
-devtools::install_github("your-org/SEMA")
+devtools::install_github("KainMiA/SEMA")
 ```
 
 ```r
