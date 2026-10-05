@@ -1,6 +1,4 @@
-# SEMA
-
-**SEMA: A Spatial-Aware Framework for Multi-Pathway Enrichment Analysis**
+# SEMA: A Spatial-Aware Framework for Multi-Pathway Enrichment Analysis
 
 SEMA is an R package designed for comprehensive gene set enrichment analysis in spatial transcriptomics data. It integrates spatial information directly into gene set scoring, enabling the discovery of spatially informed biological patterns that traditional methods might miss.
 
