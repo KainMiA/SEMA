@@ -223,8 +223,6 @@ VisualizeSpatialGraph(res, color_by = "score")
 - `RunSEMA()` / `CalculateMultipleSEMAs()` build the spatial graph only once
   for all gene sets. This is much faster with many gene sets.
 
-In normal use, scores are identical to earlier versions.
-
 ---
 
 
