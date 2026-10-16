@@ -100,8 +100,6 @@ res <- RunSEMA(expr, gene_sets, coords = coords, k = 6)
 
 ## How it works
 
-<div align="left"><img src="SEMA_diagram.png" alt="SEMA workflow" width="800"/></div>
-
 1. **Raw score.** For each spot/cell, compute either:
    - the mean expression of the gene set (`raw_method = "mean"`), or
    - a module score (`raw_method = "addmodulescore"`): the gene set mean minus
