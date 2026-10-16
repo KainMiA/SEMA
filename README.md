@@ -229,6 +229,4 @@ In normal use, scores are identical to earlier versions.
 
 ---
 
-## License
 
-MIT © Xiaokai Fan
