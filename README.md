@@ -1,7 +1,5 @@
 # SEMA: Spatial Expression Multiple-pathway Enrichment Analysis
 
-[![R-CMD-check](https://github.com/KainMiA/SEMA/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/KainMiA/SEMA/actions/workflows/R-CMD-check.yaml)
-
 SEMA is an R package for **spatially aware gene set scoring** in spatial
 transcriptomics data. It first scores each spot/cell for a gene set, then
 smooths the score over its spatial neighbors with a Gaussian kernel. The result
