@@ -36,7 +36,7 @@ CalculateMultipleSEMAs(
 
 \item{verbose}{Whether to display detailed information}
 
-\item{n_cores}{Number of parallel cores, default 1 (serial)}
+\item{n_cores}{Number of parallel cores, default 1 (serial). Currently unused.}
 }
 \value{
 List containing all gene set results

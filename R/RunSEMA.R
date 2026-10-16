@@ -6,9 +6,10 @@
 #'
 #' @param object Seurat object or expression matrix
 #' @param gene_sets Gene set list or single gene set vector
-#' @param assay Assay name to use (for Seurat objects only), default "RNA"
-#' @param slot Slot to use (for Seurat objects only), default "data"
-#' @param coords Coordinate matrix, if Seurat object and not provided, obtained from reductions$spatial
+#' @param assay Assay name to use (for Seurat objects only), default \code{DefaultAssay(object)}
+#' @param slot Slot / layer to use (for Seurat objects only), default "data"
+#' @param coords Coordinate matrix, if Seurat object and not provided, obtained from
+#'   reductions$spatial, or from the tissue image when the object has exactly one image
 #' @param reduction Dimensionality reduction method to obtain coordinates (for Seurat objects only), default "spatial"
 #' @param k Number of nearest neighbors, default 30
 #' @param raw_method Raw score calculation method: "mean" (default) or "addmodulescore"
@@ -16,8 +17,8 @@
 #' @param bandwidth Gaussian kernel bandwidth, automatically estimated if NULL
 #' @param addmodulescore_params AddModuleScore parameter list
 #' @param verbose Whether to display detailed information, default TRUE
-#' @param n_cores Number of parallel cores, default 1
-#' @param ... Other parameters passed to CalculateSEMA or CalculateMultipleSEMAs
+#' @param n_cores Number of parallel cores, default 1. Currently unused.
+#' @param ... Not used; unknown arguments raise an error
 #'
 #' @return SEMA result object
 #'
@@ -83,44 +84,63 @@ RunSEMA.Seurat <- function(object, gene_sets,
                           ...) {
   
   if (verbose) message("Input object type: Seurat")
-  
+
+  .CheckDots(...)
+
   # Get assay
   if (is.null(assay)) {
     assay <- Seurat::DefaultAssay(object)
     if (verbose) message(sprintf("Using default assay: %s", assay))
   }
-  
-  # Get expression matrix
+
+  # Get expression matrix ('slot' was renamed to 'layer' in SeuratObject 5)
   if (verbose) message("Extracting expression matrix...")
-  expression_matrix <- Seurat::GetAssayData(object, assay = assay, slot = slot)
-  
+  if (utils::packageVersion("SeuratObject") >= "5.0.0") {
+    expression_matrix <- Seurat::GetAssayData(object, assay = assay, layer = slot)
+  } else {
+    expression_matrix <- Seurat::GetAssayData(object, assay = assay, slot = slot)
+  }
+
   # Get coordinates
   if (is.null(coords)) {
     if (reduction %in% names(object@reductions)) {
       if (verbose) message(sprintf("Extracting coordinates from reduction '%s'", reduction))
       coords <- Seurat::Embeddings(object, reduction = reduction)
+    } else if (length(object@images) == 1) {
+      # Visium / Xenium etc. keep coordinates in the image slot
+      if (verbose) message("Extracting coordinates from the tissue image")
+      tissue <- Seurat::GetTissueCoordinates(object)
+      if ("cell" %in% colnames(tissue)) rownames(tissue) <- tissue$cell
+      numeric_cols <- vapply(tissue, is.numeric, logical(1))
+      coords <- as.matrix(tissue[, numeric_cols, drop = FALSE])
+    } else if (length(object@images) > 1) {
+      stop(sprintf("Reduction '%s' not found and the object has %d images; ",
+                   reduction, length(object@images)),
+           "please provide coords for one tissue section")
     } else {
       stop(sprintf("Reduction '%s' not found", reduction))
     }
   }
-  
+
   # Check coordinate dimensions
   if (ncol(coords) > 2) {
     warning(sprintf("Coordinates have %d dimensions, using only the first 2", ncol(coords)))
-    coords <- coords[, 1:2]
+    coords <- coords[, 1:2, drop = FALSE]
   }
-  
+
   # Ensure consistent cell order
   common_cells <- intersect(colnames(expression_matrix), rownames(coords))
   if (length(common_cells) == 0) {
     stop("Cell names do not match between expression matrix and coordinates")
   }
-  
+
   if (length(common_cells) < ncol(expression_matrix)) {
     warning(sprintf("Using only %d common cells", length(common_cells)))
-    expression_matrix <- expression_matrix[, common_cells]
-    coords <- coords[common_cells, ]
+    expression_matrix <- expression_matrix[, common_cells, drop = FALSE]
   }
+  # Always reorder coordinates by cell name: coords may contain extra cells
+  # or be in a different order than the expression matrix
+  coords <- coords[common_cells, , drop = FALSE]
   
   # Run SEMA analysis
   if (verbose) message(sprintf("Number of cells: %d", ncol(expression_matrix)))
@@ -138,8 +158,7 @@ RunSEMA.Seurat <- function(object, gene_sets,
       bandwidth = bandwidth,
       addmodulescore_params = addmodulescore_params,
       verbose = verbose,
-      n_cores = n_cores,
-      ...
+      n_cores = n_cores
     )
   } else {
     # Single gene set
@@ -152,8 +171,7 @@ RunSEMA.Seurat <- function(object, gene_sets,
       spatial_weight = spatial_weight,
       bandwidth = bandwidth,
       addmodulescore_params = addmodulescore_params,
-      verbose = verbose,
-      ...
+      verbose = verbose
     )
   }
   
@@ -185,6 +203,8 @@ RunSEMA.default <- function(object, gene_sets,
                            ...) {
   
   if (verbose) message("Input object type: expression matrix")
+
+  .CheckDots(...)
   
   # Directly use provided parameters
   expression_matrix <- object
@@ -212,8 +232,7 @@ RunSEMA.default <- function(object, gene_sets,
       bandwidth = bandwidth,
       addmodulescore_params = addmodulescore_params,
       verbose = verbose,
-      n_cores = n_cores,
-      ...
+      n_cores = n_cores
     )
   } else {
     # Single gene set
@@ -226,12 +245,25 @@ RunSEMA.default <- function(object, gene_sets,
       spatial_weight = spatial_weight,
       bandwidth = bandwidth,
       addmodulescore_params = addmodulescore_params,
-      verbose = verbose,
-      ...
+      verbose = verbose
     )
   }
   
   return(result)
+}
+
+# CalculateSEMA()/CalculateMultipleSEMAs() take no extra arguments, so anything
+# in '...' is a misspelled argument (e.g. the old README's 'method' and
+# 'spatial.weight'). Fail with a clear message instead of "unused argument".
+.CheckDots <- function(...) {
+  if (...length() == 0) return(invisible(NULL))
+  dots <- names(list(...))
+  if (is.null(dots)) dots <- rep("", ...length())
+  dots[dots == ""] <- "<unnamed>"
+  aliases <- c(method = "raw_method", spatial.weight = "spatial_weight")
+  hint <- ifelse(dots %in% names(aliases),
+                 sprintf(" (did you mean '%s'?)", aliases[dots]), "")
+  stop("Unknown argument(s): ", paste0("'", dots, "'", hint, collapse = ", "))
 }
 
 #' Add SEMA results to Seurat object

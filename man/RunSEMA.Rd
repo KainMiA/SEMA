@@ -26,11 +26,11 @@ RunSEMA(
 
 \item{gene_sets}{Gene set list or single gene set vector}
 
-\item{assay}{Assay name to use (for Seurat objects only), default "RNA"}
+\item{assay}{Assay name to use (for Seurat objects only), default \code{DefaultAssay(object)}}
 
-\item{slot}{Slot to use (for Seurat objects only), default "data"}
+\item{slot}{Slot / layer to use (for Seurat objects only), default "data"}
 
-\item{coords}{Coordinate matrix, if Seurat object and not provided, obtained from reductions$spatial}
+\item{coords}{Coordinate matrix, if Seurat object and not provided, obtained from reductions$spatial, or from the tissue image when the object has exactly one image}
 
 \item{reduction}{Dimensionality reduction method to obtain coordinates (for Seurat objects only), default "spatial"}
 
@@ -46,9 +46,9 @@ RunSEMA(
 
 \item{verbose}{Whether to display detailed information, default TRUE}
 
-\item{n_cores}{Number of parallel cores, default 1}
+\item{n_cores}{Number of parallel cores, default 1. Currently unused.}
 
-\item{...}{Other parameters passed to CalculateSEMA or CalculateMultipleSEMAs}
+\item{...}{Not used; unknown arguments raise an error}
 }
 \value{
 SEMA result object

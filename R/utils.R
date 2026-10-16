@@ -18,17 +18,23 @@ CreateSpatialGraph <- function(coords, k = 30, symmetric = TRUE) {
     warning(sprintf("k value adjusted to %d (maximum available)", k))
   }
   
-  nn <- RANN::nn2(coords, k = k + 1)  
-  
-  neighbor_indices <- nn$nn.idx[, 2:(k + 1), drop = FALSE]
-  
+  nn <- RANN::nn2(coords, k = k + 1)
+
+  # Drop each cell's own index. Normally it is the first column, but with
+  # duplicated coordinates RANN may return another cell first, so remove the
+  # self index explicitly and keep the first k remaining neighbors.
+  self_hit <- nn$nn.idx == seq_len(n_cells)
+  no_self <- rowSums(self_hit) == 0
+  self_hit[no_self, k + 1] <- TRUE
+  neighbor_indices <- matrix(t(nn$nn.idx)[!t(self_hit)], ncol = k, byrow = TRUE)
+
   i_vec <- rep(1:n_cells, each = k)
   j_vec <- as.vector(t(neighbor_indices))
-  
+
   valid_idx <- !is.na(j_vec) & j_vec >= 1 & j_vec <= n_cells
   i_vec <- i_vec[valid_idx]
   j_vec <- j_vec[valid_idx]
-  
+
   if (symmetric) {
     adj <- Matrix::sparseMatrix(
       i = c(i_vec, j_vec),
@@ -37,7 +43,10 @@ CreateSpatialGraph <- function(coords, k = 30, symmetric = TRUE) {
       dims = c(n_cells, n_cells),
       symmetric = FALSE
     )
-    adj <- as(adj, "symmetricMatrix")
+    # Mutual neighbors are added twice above; keep the graph binary so that
+    # igraph does not create duplicated edges (which inflates degree)
+    adj@x[] <- 1
+    adj <- methods::as(adj, "symmetricMatrix")
   } else {
     adj <- Matrix::sparseMatrix(
       i = i_vec,
@@ -95,7 +104,12 @@ EstimateBandwidth <- function(coords, method = "median_distance", k = 10) {
   
   # Multiply by coefficient to get appropriate bandwidth
   bandwidth <- bandwidth * 2
-  
+
+  if (!is.finite(bandwidth) || bandwidth <= 0) {
+    stop("Estimated bandwidth is not positive (too many cells share identical coordinates); ",
+         "please supply 'bandwidth' explicitly")
+  }
+
   message(sprintf("Estimated bandwidth: %.4f (method: %s, k=%d)", bandwidth, method, k_adj))
   return(bandwidth)
 }
@@ -125,7 +139,7 @@ AddModuleScoreSEMA <- function(expression_matrix, features,
   # Filter genes not in expression matrix
   all_genes <- rownames(expression_matrix)
   features <- lapply(features, function(x) {
-    x[x %in% all_genes]
+    unique(x[x %in% all_genes])
   })
   
   # Remove empty gene sets
@@ -156,7 +170,9 @@ AddModuleScoreSEMA <- function(expression_matrix, features,
                            probs = seq(0, 1, length.out = n_bins + 1))
   breaks[1] <- -Inf
   breaks[length(breaks)] <- Inf
-  
+  # Sparse data often gives tied quantiles, which makes cut() fail
+  breaks <- unique(breaks)
+
   gene_bins <- cut(gene_means, breaks = breaks, labels = FALSE, include.lowest = TRUE)
   names(gene_bins) <- names(gene_means)
   
